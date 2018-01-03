@@ -1,26 +1,26 @@
 # README #
 ## Funktionen ##
 ### WiFi Manager ###
-https://github.com/tzapu/WiFiManager
-Der WiFi Manager startet bei Touch (Pin D5) bei PowerOn
-
+https://github.com/tzapu/WiFiManager<br>
+Der WiFi Manager startet bei Touch (Pin D5) bei PowerOn<br>
+<br>
 ### Heartbeat ###
-Flash an "LED_BUILTIN"
-
+Flash an "LED_BUILTIN"<br>
+<br>
 ### OTA ###
-Update Over Air
+Update Over Air<br>
 Konfiguriertes Passwort
 ```
 ArduinoOTA.setPassword((const char *)"52364897");
 ```
-
+<br>
 ### DNS Name ###
-Der DNS Name setzt sich zusammen aus [hostName] und [ESPNodeID]
+Der DNS Name setzt sich zusammen aus [hostName] und [ESPNodeID]<br>
 Konfigurierbarer [hostName]
 ```
 char hostName[30] = "SensorNode-";
 ```
-
+<br>
 ### MQTT Syntax ###
 #### Publish ####
 Daten werden an den MQTT Server Übertragen. <br>
@@ -29,10 +29,10 @@ Konfigurierbarer [mqttPrefix]
 ```
 const char mqttPrefix[] = "SensorNode/";
 ```
-
-Bsp.:
-SensorNode/166646/HTU21D_humidity
-
+<br>
+Bsp.:<br>
+SensorNode/166646/HTU21D_humidity<br>
+<br>
 #### Subscribe #### 
 Farbe LED1<br>
 Bsp: SensorNode/166646/IN/LED1<br>
@@ -41,38 +41,38 @@ Bsp: SensorNode/166646/IN/LED1<br>
 Farbe LED<br>
 Bsp: SensorNode/166646/IN/LED<br>
 Value #ff00ff<br>
-
+<br>
 Reset auslösen<br>
 Bsp: SensorNode/166646/IN/RESET<br>
-
+<br>
 ### Sensoren ###
-Touch
-DS10B20 Temp OneWire
-TSL2561 Light I2C
-SHT20 Humidity, temperatur I2C
-
+Touch<br>
+DS10B20 Temp OneWire<br>
+TSL2561 Light I2C<br>
+SHT20 Humidity, temperatur I2C<br>
+<br>
 ### Aktoren ###
 
 ### Anschlussplan ###
-WeMos ESP8266
-
-TX  1
-RX  3
-D1  5  SCL
-D2  4  SDA
-D3  0  (WAKE)
-D4  2  NEOPIXEL
-GND
-5V
-
-RST
-A0
-D0  16
-D5  14  Touch
-D6  12
-D7  13  DS10B20
-D8  15
-3V3
-
+WeMos ESP8266<br>
+<br>
+TX  1<br>
+RX  3<br>
+D1  5  SCL<br>
+D2  4  SDA<br>
+D3  0  (WAKE)<br>
+D4  2  NEOPIXEL<br>
+GND<br>
+5V<br>
+<br>
+RST<br>
+A0<br>
+D0  16<br>
+D5  14  Touch<br>
+D6  12<br>
+D7  13  DS10B20<br>
+D8  15<br>
+3V3<br>
+<br>
 
 
