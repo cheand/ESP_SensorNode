@@ -2,7 +2,7 @@
 ## Funktionen ##
 ### WiFi Manager ###
 https://github.com/tzapu/WiFiManager<br>
-Der WiFi Manager startet bei Touch (Pin D5) bei PowerOn<br>
+Der WiFi Manager startet, wenn Pin D5 == 1 (Touch) bei PowerOn<br>
 <br>
 ### Heartbeat ###
 Flash an "LED_BUILTIN"<br>
