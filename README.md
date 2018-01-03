@@ -13,14 +13,16 @@ Konfiguriertes Passwort
 ```
 ArduinoOTA.setPassword((const char *)"52364897");
 ```
-<br>
+
+
 ### DNS Name ###
+
 Der DNS Name setzt sich zusammen aus [hostName] und [ESPNodeID]<br>
 Konfigurierbarer [hostName]
 ```
 char hostName[30] = "SensorNode-";
 ```
-<br>
+
 ### MQTT Syntax ###
 #### Publish ####
 Daten werden an den MQTT Server Übertragen. <br>
