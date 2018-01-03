@@ -19,6 +19,8 @@
 #include <PubSubClient.h>         // https://github.com/knolleary/pubsubclient/releases/tag/v2.6
 #include <Log2String.h>           //selbst entwickelte Lib
 
+#define BuildVersion "2018-01-03"
+
 #define EnableTSL2561           1
 #define EnableHTU21D            1
 #define EnableDallasTemperature 1
@@ -37,9 +39,12 @@ char chipidChar[8] = "";
 char hostName[30] = "SensorNode-";
 const char mqttPrefix[] = "SensorNode/";
 
-Log2String LogESPAlias;
+
 Log2String LogESPMAC;
 Log2String LogESPFreeHeap;
+
+Log2String LogAlias;
+Log2String LogVersion;
 
 // Ticker
 Ticker ticker;
@@ -52,17 +57,22 @@ bool button1State_last = 0;
 Log2String LogTouch1;
 
 //DS10B20 Temp OneWire
+#ifdef EnableDallasTemperature
 OneWire  myOneWire(D7);  // on pin 10 (a 4.7K resistor is necessary)
 DallasTemperature myDS10B20(&myOneWire);
 float DS10B20_temperatur;
 Log2String LogDS10B20;
+#endif
 
 //TSL2561 Light I2C
+#ifdef EnableTSL2561
 Adafruit_TSL2561_Unified myTSL2561 = Adafruit_TSL2561_Unified(TSL2561_ADDR_FLOAT, 12345);
 float TSL2561_brightness;
 Log2String LogTSL2561;
+#endif
 
 //SHT20 Humidity, temperatur I2C
+#ifdef EnableHTU21D
 HTU21D myHTU21D;
 float HTU21D_humidity;
 Log2String LogHTU21D_humidity;
@@ -70,6 +80,7 @@ Log2String LogHTU21D_humidity;
 float HTU21D_temperatur;
 float HTU21D_temperatur_offset = -2.9;
 Log2String LogHTU21D_temperatur;
+#endif
 
 //NEOPIXEL
 const int NEOPIXEL_PIN = D6; //Neopixel Pin
@@ -223,18 +234,23 @@ void setup() {
   LogTouch1.setTimeBetweenSend(300000);
 
   //DS10B20 Temp OneWire
+#ifdef EnableDallasTemperature
   myDS10B20.begin();
   LogDS10B20.setValueName(mqttPrefix + String(ESP.getChipId(), HEX) + "/DS10B20_temperatur"); // String für Topic
   LogDS10B20.setTimeBetweenSend(300000); // Intervall im ms, wenn mindestens 1x gesendet wird
   LogDS10B20.setValueChange(0.10); // Messwertänderung, bei der gesendet wird (nur für flow Variablen!
+#endif
 
   //TSL2561 Light I2C
+#ifdef EnableTSL2561
   myTSL2561.begin();
   LogTSL2561.setValueName(mqttPrefix + String(ESP.getChipId(), HEX) + "/TSL2561_brightness");
   LogTSL2561.setTimeBetweenSend(300000);
   LogTSL2561.setValueChange(1.00);
+#endif
 
   //SHT20 Humidity, temperatur I2C
+#ifdef EnableHTU21D
   myHTU21D.begin();
   LogHTU21D_humidity.setValueName(mqttPrefix + String(ESP.getChipId(), HEX) + "/HTU21D_humidity");
   LogHTU21D_humidity.setTimeBetweenSend(300000);
@@ -242,11 +258,16 @@ void setup() {
   LogHTU21D_temperatur.setValueName(mqttPrefix + String(ESP.getChipId(), HEX) + "/HTU21D_temperatur");
   LogHTU21D_temperatur.setTimeBetweenSend(300000);
   LogHTU21D_temperatur.setValueChange(0.10);
+#endif
 
-  //ESP
-  LogESPAlias.setValueName(mqttPrefix + String(ESP.getChipId(), HEX) + "/ESPAlias");
-  LogESPAlias.setValue(String(settings.mqttAlias));
-  LogESPAlias.setTimeBetweenSend(60000);
+  //ESP Senden Alias, Build Version, MAC Adresse, freier Speicher
+  LogAlias.setValueName(mqttPrefix + String(ESP.getChipId(), HEX) + "/Alias");
+  LogAlias.setValue(String(settings.mqttAlias));
+  LogAlias.setTimeBetweenSend(60000);
+  LogVersion.setValueName(mqttPrefix + String(ESP.getChipId(), HEX) + "/Version");
+  LogVersion.setValue(String(BuildVersion));
+  LogVersion.setTimeBetweenSend(60000);
+
   LogESPMAC.setValueName(mqttPrefix + String(ESP.getChipId(), HEX) + "/ESPMAC");
   LogESPMAC.setValue(String(WiFi.macAddress()));
   LogESPMAC.setTimeBetweenSend(60000);
@@ -369,37 +390,40 @@ void setup() {
   Serial.println("----MQTT Verbindung---------------");
 
   //OTA
+#ifdef EnableOTA
   // Port defaults to 8266
   // ArduinoOTA.setPort(8266);
-
   // Hostname defaults to esp8266-[ChipID]
   ArduinoOTA.setHostname(hostName);
   ArduinoOTA.setPassword((const char *)"52364897"); // No authentication by default
 
   ArduinoOTA.onStart([]() {
-    Serial.println("Start");
+    Serial.println("OTA Start");
   });
   ArduinoOTA.onEnd([]() {
-    Serial.println("\nEnd");
+    Serial.println("\n OTA End");
   });
   ArduinoOTA.onProgress([](unsigned int progress, unsigned int total) {
     Serial.printf("Progress: %u%%\r", (progress / (total / 100)));
   });
   ArduinoOTA.onError([](ota_error_t error) {
     Serial.printf("Error[%u]: ", error);
-    if (error == OTA_AUTH_ERROR) Serial.println("Auth Failed");
-    else if (error == OTA_BEGIN_ERROR) Serial.println("Begin Failed");
-    else if (error == OTA_CONNECT_ERROR) Serial.println("Connect Failed");
-    else if (error == OTA_RECEIVE_ERROR) Serial.println("Receive Failed");
-    else if (error == OTA_END_ERROR) Serial.println("End Failed");
+    if (error == OTA_AUTH_ERROR) Serial.println("OTA Auth Failed");
+    else if (error == OTA_BEGIN_ERROR) Serial.println("OTA Begin Failed");
+    else if (error == OTA_CONNECT_ERROR) Serial.println("OTA Connect Failed");
+    else if (error == OTA_RECEIVE_ERROR) Serial.println("OTA Receive Failed");
+    else if (error == OTA_END_ERROR) Serial.println("OTAEnd Failed");
   });
   ArduinoOTA.begin();
+#endif
 }
 
 //### LOOP ################################################################################
 void loop() {
   //OTA
+#ifdef EnableOTA
   ArduinoOTA.handle();
+#endif
 
   //RESET Anforderung
   if (configmode == 1) {
@@ -449,18 +473,24 @@ void loop() {
   LogTouch1.setValue(digitalRead(button1Pin));
 
   //DS10B20 Temp OneWire
+#ifdef EnableDallasTemperature
   myDS10B20.requestTemperatures();
   LogDS10B20.setValue(myDS10B20.getTempCByIndex(0));
+#endif
 
   //TSL2561 Light I2C
+#ifdef EnableTSL2561
   digitalWrite(LED_BUILTIN, HIGH); // LED Aus vor Lichtmessung
   sensors_event_t TSL2561_event;
   myTSL2561.getEvent(&TSL2561_event);
   LogTSL2561.setValue(TSL2561_event.light);
+#endif
 
   //SHT20 Humidity, temperatur I2C
+#ifdef EnableHTU21D
   LogHTU21D_humidity.setValue(myHTU21D.readHumidity());
   LogHTU21D_temperatur.setValue(myHTU21D.readTemperature() + HTU21D_temperatur_offset);
+#endif
 
   // ### Verarbeiten
 
@@ -477,29 +507,42 @@ void loop() {
     LogTouch1.setSendNow();
   }
 
+  //DS10B20 Temp OneWire
+#ifdef EnableDallasTemperature
   if (LogDS10B20.getSendRequired()) {
     mqttClient.publish(LogDS10B20.getCValueName(), LogDS10B20.getCValue());
     LogDS10B20.setSendNow();
   }
+#endif
 
+  //TSL2561 Light I2C
+#ifdef EnableTSL2561
   if (LogTSL2561.getSendRequired()) {
     mqttClient.publish(LogTSL2561.getCValueName(), LogTSL2561.getCValue());
     LogTSL2561.setSendNow();
   }
+#endif
 
+  //SHT20 Humidity, temperatur I2C
+#ifdef EnableHTU21D
   if (LogHTU21D_humidity.getSendRequired()) {
     mqttClient.publish(LogHTU21D_humidity.getCValueName(), LogHTU21D_humidity.getCValue());
     LogHTU21D_humidity.setSendNow();
   }
-
   if (LogHTU21D_temperatur.getSendRequired()) {
     mqttClient.publish(LogHTU21D_temperatur.getCValueName(), LogHTU21D_temperatur.getCValue());
     LogHTU21D_temperatur.setSendNow();
   }
+#endif
+
   //ESP
-  if (LogESPAlias.getSendRequired()) {
-    mqttClient.publish(LogESPAlias.getCValueName(), LogESPAlias.getCValue());
-    LogESPAlias.setSendNow();
+  if (LogAlias.getSendRequired()) {
+    mqttClient.publish(LogAlias.getCValueName(), LogAlias.getCValue());
+    LogAlias.setSendNow();
+  }
+  if (LogVersion.getSendRequired()) {
+    mqttClient.publish(LogVersion.getCValueName(), LogVersion.getCValue());
+    LogVersion.setSendNow();
   }
   if (LogESPMAC.getSendRequired()) {
     mqttClient.publish(LogESPMAC.getCValueName(), LogESPMAC.getCValue());
