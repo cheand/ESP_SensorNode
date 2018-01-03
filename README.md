@@ -34,7 +34,7 @@ const char mqttPrefix[] = "SensorNode/";
 <br>
 Bsp.:<br>
 SensorNode/166646/HTU21D_humidity<br>
-<br>
+
 #### Subscribe #### 
 Farbe LED1<br>
 Bsp: SensorNode/166646/IN/LED1<br>
@@ -46,13 +46,13 @@ Value #ff00ff<br>
 <br>
 Reset auslösen<br>
 Bsp: SensorNode/166646/IN/RESET<br>
-<br>
+
 ### Sensoren ###
 Touch<br>
 DS10B20 Temp OneWire<br>
 TSL2561 Light I2C<br>
 SHT20 Humidity, temperatur I2C<br>
-<br>
+
 ### Aktoren ###
 
 ### Anschlussplan ###
