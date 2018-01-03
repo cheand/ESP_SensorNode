@@ -33,7 +33,7 @@ const char mqttPrefix[] = "SensorNode/";
 Bsp.:
 SensorNode/166646/HTU21D_humidity
 
-#### Subscribe ####
+#### Subscribe #### 
 Farbe LED1
 Bsp: SensorNode/166646/IN/LED1
 Farbe LED2
