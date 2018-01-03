@@ -23,8 +23,8 @@ char hostName[30] = "SensorNode-";
 
 ### MQTT Syntax ###
 #### Publish ####
-Daten werden an den MQTT Server Übertragen.
-Der Topic setzt sich zusammen aus [mqttPrefix] [ESPNodeID] [Sensor]
+Daten werden an den MQTT Server Übertragen. <br>
+Der Topic setzt sich zusammen aus [mqttPrefix] [ESPNodeID] [Sensor]<br>
 Konfigurierbarer [mqttPrefix]
 ```
 const char mqttPrefix[] = "SensorNode/";
@@ -34,16 +34,16 @@ Bsp.:
 SensorNode/166646/HTU21D_humidity
 
 #### Subscribe #### 
-Farbe LED1
-Bsp: SensorNode/166646/IN/LED1
-Farbe LED2
-Bsp: SensorNode/166646/IN/LED1
-Farbe LED
-Bsp: SensorNode/166646/IN/LED
-Value #ff00ff
+Farbe LED1<br>
+Bsp: SensorNode/166646/IN/LED1<br>
+Farbe LED2<br>
+Bsp: SensorNode/166646/IN/LED1<br>
+Farbe LED<br>
+Bsp: SensorNode/166646/IN/LED<br>
+Value #ff00ff<br>
 
-Reset auslösen
-Bsp: SensorNode/166646/IN/RESET
+Reset auslösen<br>
+Bsp: SensorNode/166646/IN/RESET<br>
 
 ### Sensoren ###
 Touch
